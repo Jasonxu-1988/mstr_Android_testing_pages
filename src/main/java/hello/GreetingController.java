@@ -11,13 +11,15 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @RestController
 public class GreetingController {
 
-    private static final String filePath = "/Users/bxu/Desktop/Jason/Workspaces/Testdir";
+    private static final String filePath = "Z:\\";
     private static final String pattern = "^10.11.1000.*";
+    private static final String last_build_num_pattern = "^[1-9].*";
     private static final String template = "Hello, %s!";
     private final AtomicLong counter = new AtomicLong();
 
@@ -33,7 +35,58 @@ public class GreetingController {
         return new Builds(list);
     }
 
-    public static List getBuildsFromFileSys(String path){
+    public static List getBuildsStringListFromFileSys(String path){
+        File f = new File(path);
+        List l = new ArrayList<String>();
+        File[] fl = f.listFiles();
+        for(int i=0; i<fl.length; i++)
+        {
+            if(fl[i].isDirectory()){
+                String tempStr = fl[i].getName();
+                boolean isMatch = Pattern.matches(pattern, tempStr);
+                if(isMatch)
+                {
+                    l.add(fl[i].getName());
+                }
+            }
+        }
+        return l;
+    }
+
+    public static List<String> getFileSort(String path) {
+
+        List<String> list = getBuildsStringListFromFileSys(path);
+        if (list != null && list.size() > 0) {
+
+            Collections.sort(list, new Comparator<String>() {
+                public int compare(String file, String newFile) {
+                    String fStr1 = file.split("\\.")[3];
+                    String fStr2 = newFile.split("\\.")[3];
+                    String temp1 = "";
+                    String temp2 = "";
+                    Pattern pattern = Pattern.compile(last_build_num_pattern);
+                    Matcher m1 = pattern.matcher(fStr1);
+                    Matcher m2 = pattern.matcher(fStr2);
+                    if(m1.find()) temp1 = m1.group();
+                    if(m2.find()) temp2 = m1.group();
+                    System.out.print("=========> result1="+temp1+" result2="+temp2);
+                    int f1 = Integer.parseInt(temp1);
+                    int f2 = Integer.parseInt(temp2);
+                    if (f1 < f2) {
+                        return 1;
+                    } else if (f1 == f2) {
+                        return 0;
+                    } else {
+                        return -1;
+                    }
+                }
+            });
+
+        }
+        return list;
+    }
+
+   /* public static List getBuildsFromFileSys(String path){
         File f = new File(path);
 
         List listF = new ArrayList<File>();
@@ -50,9 +103,9 @@ public class GreetingController {
             }
         }
         return listF;
-    }
+    }*/
 
-    public static List<String> getFileSort(String path) {
+   /* public static List<String> getFileSort(String path) {
 
         List<File> list = getBuildsFromFileSys(path);
         List listStr = new ArrayList<String>();
@@ -77,5 +130,5 @@ public class GreetingController {
         }
 
         return listStr;
-    }
+    }*/
 }
