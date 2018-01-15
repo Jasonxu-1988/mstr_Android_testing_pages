@@ -19,7 +19,7 @@ public class GreetingController {
 
     private static final String filePath = "Z:\\";
     private static final String pattern = "^10.11.1000.*";
-    private static final String last_build_num_pattern = "^[1-9].*";
+    private static final String last_build_num_pattern = "[1-9]+.*$";
     private static final String template = "Hello, %s!";
     private final AtomicLong counter = new AtomicLong();
 
@@ -68,8 +68,7 @@ public class GreetingController {
                     Matcher m1 = pattern.matcher(fStr1);
                     Matcher m2 = pattern.matcher(fStr2);
                     if(m1.find()) temp1 = m1.group();
-                    if(m2.find()) temp2 = m1.group();
-                    System.out.print("=========> result1="+temp1+" result2="+temp2);
+                    if(m2.find()) temp2 = m2.group();
                     int f1 = Integer.parseInt(temp1);
                     int f2 = Integer.parseInt(temp2);
                     if (f1 < f2) {
