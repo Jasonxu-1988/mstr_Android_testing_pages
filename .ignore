@@ -41,7 +41,7 @@ local.properties
 *.iml
 *.ipr
 *.iws
-.idea/*
+/.idea
 .idea/workspace.xml
 
 out
