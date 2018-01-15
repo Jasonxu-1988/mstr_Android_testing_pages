@@ -42,6 +42,8 @@ local.properties
 *.ipr
 *.iws
 .idea/*
+.idea/workspace.xml
+
 out
 gen
 
